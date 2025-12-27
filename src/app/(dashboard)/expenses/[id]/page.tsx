@@ -1,24 +1,23 @@
 "use client";
 
-import { useEffect, useState, use } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter, useParams } from "next/navigation";
 import { ExpenseForm } from "@/components/forms/ExpenseForm";
 import { Expense } from "@/types";
 import { Skeleton } from "@/components/ui";
 import { Card, CardContent } from "@/components/ui";
 
-export default function EditExpensePage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = use(params);
+export default function EditExpensePage() {
+  const params = useParams();
+  const id = params.id as string;
   const router = useRouter();
   const [expense, setExpense] = useState<Expense | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!id) return;
+
     const fetchExpense = async () => {
       try {
         const response = await fetch(`/api/expenses/${id}`);
